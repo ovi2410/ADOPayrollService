@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UC7_9sloveusingERdiagram
+namespace uc10_usetransactionqueryforinsert
 {
     class ERRepository
     {
@@ -218,4 +218,5 @@ namespace UC7_9sloveusingERdiagram
 
     }
 }
+    
 

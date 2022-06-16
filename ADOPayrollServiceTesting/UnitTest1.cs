@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace uc7_9_TestProject1
+namespace uc10_TestProject1
 {
     [TestClass]
     public class PayrollServiceTesting
@@ -144,6 +144,16 @@ namespace uc7_9_TestProject1
             string expected = "39000000 9000000 30000000 19500000 2";
             string query = "select sum(PayrollCalculate.BasicPay),min(PayrollCalculate.BasicPay),max(PayrollCalculate.BasicPay),Round(AVG(PayrollCalculate.BasicPay),0),COUNT(*)  from Employee inner join PayrollCalculate on Employee.EmployeeId = PayrollCalculate.EmployeeIdentity where Employee.Gender = 'M' group by Employee.Gender";
             string actual = eRRepository.AggregateFunctionBasedOnGender(query);
+            Assert.AreEqual(actual, expected);
+        }
+        //Usecase 10: Insert in ER using Transaction
+        [TestMethod]
+        [TestCategory("Using Transaction Query")]
+        public void GivenInsertQuery_usingTransaction_returnOne()
+        {
+            int expected = 1;
+            TransactionClass transactionClass = new TransactionClass();
+            int actual = transactionClass.InsertIntoTables();
             Assert.AreEqual(actual, expected);
         }
 
