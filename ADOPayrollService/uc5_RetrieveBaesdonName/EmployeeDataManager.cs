@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc4_updatesalaryusingStoredProcedure
+namespace uc5_RetrieveBaesdonName
 {
     class EmployeeDataManager
     {
@@ -20,5 +20,6 @@ namespace uc4_updatesalaryusingStoredProcedure
         public double IncomeTax { get; set; }
         public double TaxablePay { get; set; }
         public double NetPay { get; set; }
+
     }
 }
