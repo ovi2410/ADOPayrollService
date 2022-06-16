@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc12_Maintainlistforaudit
+namespace uc14_timeelaspedwhileinsertintoSql_thread
 {
-    class ERRepository
+     class ERRepository
     {
         //Give path for Database Connection
         public static string connection = @"Server=.;Database=payroll_services;Trusted_Connection=True;";

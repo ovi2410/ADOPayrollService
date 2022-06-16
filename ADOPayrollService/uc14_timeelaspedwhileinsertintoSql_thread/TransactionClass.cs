@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc12_Maintainlistforaudit
+namespace uc14_timeelaspedwhileinsertintoSql_thread
 {
     class TransactionClass
     {
         public static string connectionString = @"Server=.;Database=payroll_services;Trusted_Connection=True;";
         SqlConnection SqlConnection = new SqlConnection(connectionString);
-        private object employeeDataManager;
-
+        //Create Object for EmployeeData Repository
+        EmployeeDataManager employeeDataManager = new EmployeeDataManager();
+        List<EmployeeDataManager> employeeList = new List<EmployeeDataManager>();
         //Transaction Query
         public int InsertIntoTables()
         {
@@ -29,13 +30,19 @@ namespace uc12_Maintainlistforaudit
                 {
                     //Insert data into Table
                     sqlCommand.CommandText = "Insert into Employee values ('2','Radha Mani','9600035350', 'Chennai', '2017-12-17', 'F')";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "Insert into PayrollCalculate(EmployeeIdentity,BasicPay) values('5','650000')";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "update PayrollCalculate set Deductions = (BasicPay *20)/100 where EmployeeIdentity = '5'";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "update PayrollCalculate set TaxablePay = (BasicPay - Deductions) where EmployeeIdentity = '5'";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "update PayrollCalculate set IncomeTax = (TaxablePay * 10) / 100 where EmployeeIdentity = '5'";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "update PayrollCalculate set NetPay = (BasicPay - IncomeTax) where EmployeeIdentity = '5'";
+                    sqlCommand.ExecuteNonQuery();
                     sqlCommand.CommandText = "Insert into EmployeeDepartment values('3','5')";
-
+                    sqlCommand.ExecuteNonQuery();
                     //Commit 
                     sqlTransaction.Commit();
                     Console.WriteLine("Updated!");
@@ -135,7 +142,39 @@ namespace uc12_Maintainlistforaudit
             SqlConnection.Close();
             return result;
         }
-        public void RetrieveAllData()
+        //MultiThreading: Usecase 1
+        //Usecase 10: Retrieve in ER using Transaction
+        public int ImplementwithoutUsingThread()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            RetrieveAllData(1);
+            stopWatch.Stop();
+            Console.WriteLine("Duration without thread: {0}", stopWatch.ElapsedMilliseconds);
+            if (Convert.ToInt32(stopWatch.ElapsedMilliseconds) != 0)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+
+        //MultiThreading: Usecase 2
+        public int ImplementUsingThread()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            RetrieveAllData(2);
+            stopWatch.Stop();
+            Console.WriteLine("Duration  thread: {0}", stopWatch.ElapsedMilliseconds);
+            if (Convert.ToInt32(stopWatch.ElapsedMilliseconds) != 0)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public void RetrieveAllData(int n)
         {
             //Open Connection
             SqlConnection.Open();
@@ -144,26 +183,28 @@ namespace uc12_Maintainlistforaudit
             {
                 string query = "SELECT CompanyID,IsActive,CompanyName,EmployeeID,EmployeeName,EmployeeAddress,EmployeePhoneNumber,StartDate,Gender,BasicPay,Deductions,TaxablePay,IncomeTax,NetPay,DepartName FROM Company INNER JOIN Employee ON Company.CompanyID = Employee.CompanyIdentity and Employee.IsActive=1 INNER JOIN PayrollCalculate on PayrollCalculate.EmployeeIdentity = Employee.EmployeeID INNER JOIN EmployeeDepartment on Employee.EmployeeID = EmployeeDepartment.EmployeeIdentity INNER JOIN Department on Department.DepartmentId = EmployeeDepartment.DepartmentIdentity";
                 SqlCommand sqlCommand = new SqlCommand(query, SqlConnection);
-                DisplayEmployeeDetails(sqlCommand);
-
+                DisplayEmployeeDetails(sqlCommand, n);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+
             //Close Connection
             SqlConnection.Close();
             return;
         }
-        public void DisplayEmployeeDetails(SqlCommand sqlCommand)
+        public void DisplayEmployeeDetails(SqlCommand sqlCommand, int n)
         {
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            //Check if swlDataReader has Rows
+            //Check if sqlDataReader has Rows
             if (sqlDataReader.HasRows)
             {
                 //Read each row
                 while (sqlDataReader.Read())
                 {
+                    EmployeeDataManager employeeDataManager = new EmployeeDataManager();
+
                     //Read data SqlDataReader and store 
                     employeeDataManager.EmployeeID = Convert.ToInt32(sqlDataReader["EmployeeID"]);
                     employeeDataManager.CompanyID = Convert.ToInt32(sqlDataReader["CompanyID"]);
@@ -180,12 +221,36 @@ namespace uc12_Maintainlistforaudit
                     employeeDataManager.Address = sqlDataReader["EmployeeAddress"].ToString();
                     employeeDataManager.StartDate = Convert.ToDateTime(sqlDataReader["StartDate"]);
                     employeeDataManager.IsActive = Convert.ToInt32(sqlDataReader["IsActive"]);
-                    //Display Data
-                    Console.WriteLine("\nCompany ID: {0} \t Company Name: {1} \nEmployee ID: {2} \t Employee Name: {3} \nBasic Pay: {4} \t Deduction: {5} \t Income Tax: {6} \t Taxable Pay: {7} \t NetPay: {8} \nGender: {9} \t PhoneNumber: {10} \t Department: {11} \t Address: {12} \t Start Date: {13} \t IsActive: {14}", employeeDataManager.CompanyID, employeeDataManager.CompanyName, employeeDataManager.EmployeeID, employeeDataManager.EmployeeName, employeeDataManager.BasicPay, employeeDataManager.Deduction, employeeDataManager.IncomeTax, employeeDataManager.TaxablePay, employeeDataManager.NetPay, employeeDataManager.Gender, employeeDataManager.EmployeePhoneNumber, employeeDataManager.EmployeeDepartment, employeeDataManager.Address, employeeDataManager.StartDate, employeeDataManager.IsActive);
                     employeeList.Add(employeeDataManager);
+                    if (n == 1)
+                    {
+                        //Display Data
+                        Console.WriteLine("\nCompany ID: {0} \t Company Name: {1} \nEmployee ID: {2} \t Employee Name: {3} \nBasic Pay: {4} \t Deduction: {5} \t Income Tax: {6} \t Taxable Pay: {7} \t NetPay: {8} \nGender: {9} \t PhoneNumber: {10} \t Department: {11} \t Address: {12} \t Start Date: {13} \t IsActive: {14}", employeeDataManager.CompanyID, employeeDataManager.CompanyName, employeeDataManager.EmployeeID, employeeDataManager.EmployeeName, employeeDataManager.BasicPay, employeeDataManager.Deduction, employeeDataManager.IncomeTax, employeeDataManager.TaxablePay, employeeDataManager.NetPay, employeeDataManager.Gender, employeeDataManager.EmployeePhoneNumber, employeeDataManager.EmployeeDepartment, employeeDataManager.Address, employeeDataManager.StartDate, employeeDataManager.IsActive);
+
+                    }
+                    if (n == 2)
+                    {
+                        Task task = new Task(() =>
+                        {
+                            lock (this)
+                            {
+                                //Display Data
+                                Console.WriteLine("\nCompany ID: {0} \t Company Name: {1} \nEmployee ID: {2} \t Employee Name: {3} \nBasic Pay: {4} \t Deduction: {5} \t Income Tax: {6} \t Taxable Pay: {7} \t NetPay: {8} \nGender: {9} \t PhoneNumber: {10} \t Department: {11} \t Address: {12} \t Start Date: {13} \t IsActive: {14}", employeeDataManager.CompanyID, employeeDataManager.CompanyName, employeeDataManager.EmployeeID, employeeDataManager.EmployeeName, employeeDataManager.BasicPay, employeeDataManager.Deduction, employeeDataManager.IncomeTax, employeeDataManager.TaxablePay, employeeDataManager.NetPay, employeeDataManager.Gender, employeeDataManager.EmployeePhoneNumber, employeeDataManager.EmployeeDepartment, employeeDataManager.Address, employeeDataManager.StartDate, employeeDataManager.IsActive);
+                            }
+                        });
+                        task.Start();
+                    }
                 }
+
                 //Close sqlDataReader Connection
                 sqlDataReader.Close();
+            }
+        }
+        public void displayList()
+        {
+            foreach (var i in employeeList)
+            {
+                Console.WriteLine(i.EmployeeName);
             }
         }
     }
