@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc2_RetrieveDatafromdatabase
+namespace uc3_updatebasicpayinsqlserver
 {
-     class EmployeeRepository
+    class EmployeeRepository
     {
         //Give path for Database Connection
         public static string connection = @"Server=.;Database=EmployeeServices;Trusted_Connection=True;";
@@ -53,6 +53,27 @@ namespace uc2_RetrieveDatafromdatabase
             }
             //Close Connection
             sqlConnection.Close();
+        }
+        //UseCase 3: Update Salary to 3000000
+        public void UpdateSalaryQuery()
+        {
+            //Open Connection
+            sqlConnection.Open();
+            string query = "update employee_payroll set BasicPay=3000000 where EmployeeName= 'Ashaya Sivakumar'";
+            //Pass query to TSql
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            int result = sqlCommand.ExecuteNonQuery();
+            if (result != 0)
+            {
+                Console.WriteLine("Updated!");
+            }
+            else
+            {
+                Console.WriteLine("Not Updated!");
+            }
+            //Close Connection
+            sqlConnection.Close();
+            GetSqlData();
         }
     }
 }

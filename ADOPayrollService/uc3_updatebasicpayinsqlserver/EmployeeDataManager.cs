@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc2_RetrieveDatafromdatabase
+namespace uc3_updatebasicpayinsqlserver
 {
-     class EmployeeDataManager
+    class EmployeeDataManager
     {
         public int EmployeeID { get; set; }
         public string EmployeeName { get; set; }
