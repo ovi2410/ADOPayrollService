@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc4_RefactorCode_selectquerybasedonname
+namespace uc4_updatesalaryusingStoredProcedure
 {
     class EmployeeDataManager
     {
