@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace uc10_TestProject1
+namespace uc11_TestProject1
 {
     [TestClass]
     public class PayrollServiceTesting
@@ -156,7 +156,18 @@ namespace uc10_TestProject1
             int actual = transactionClass.InsertIntoTables();
             Assert.AreEqual(actual, expected);
         }
+        //Usecase 11: Delete using Cascade Delete alteration
+        [TestMethod]
+        [TestCategory("Using Transaction Query")]
+        public void GivenDeleteQuery_usingTransaction_returnOne()
+        {
+            int expected = 1;
+            TransactionClass transactionClass = new TransactionClass();
+            int actual = transactionClass.DeleteUsingCasadeDelete();
+            Assert.AreEqual(actual, expected);
+        }
 
 
     }
+}
 }

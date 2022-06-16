@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc10_usetransactionqueryforinsert
+namespace uc11_deleteusingcascadedelete
 {
     class ERRepository
     {
@@ -218,5 +218,4 @@ namespace uc10_usetransactionqueryforinsert
 
     }
 }
-    
 
