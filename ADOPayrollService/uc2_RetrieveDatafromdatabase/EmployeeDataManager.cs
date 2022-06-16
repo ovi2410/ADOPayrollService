@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc1_createdatabase
+namespace uc2_RetrieveDatafromdatabase
 {
-    class EmployeeDataManager
+     class EmployeeDataManager
     {
         public int EmployeeID { get; set; }
         public string EmployeeName { get; set; }
