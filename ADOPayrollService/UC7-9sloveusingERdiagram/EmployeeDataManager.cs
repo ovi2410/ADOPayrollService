@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc6_aggregatefunction
+namespace UC7_9sloveusingERdiagram
 {
     class EmployeeDataManager
     {
@@ -20,5 +20,6 @@ namespace uc6_aggregatefunction
         public double IncomeTax { get; set; }
         public double TaxablePay { get; set; }
         public double NetPay { get; set; }
+
     }
 }
