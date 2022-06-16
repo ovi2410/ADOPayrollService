@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc11_deleteusingcascadedelete
+namespace uc12_Maintainlistforaudit
 {
     class EmployeeDataManager
     {
@@ -20,6 +20,5 @@ namespace uc11_deleteusingcascadedelete
         public double IncomeTax { get; set; }
         public double TaxablePay { get; set; }
         public double NetPay { get; set; }
-
     }
 }
