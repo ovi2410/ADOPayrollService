@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc5_RetrieveBaesdonName
+namespace uc6_aggregatefunction
 {
     class EmployeeDataManager
     {
@@ -20,6 +20,5 @@ namespace uc5_RetrieveBaesdonName
         public double IncomeTax { get; set; }
         public double TaxablePay { get; set; }
         public double NetPay { get; set; }
-
     }
 }

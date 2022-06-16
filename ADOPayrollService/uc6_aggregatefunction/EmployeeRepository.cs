@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uc5_RetrieveBaesdonName
+namespace uc6_aggregatefunction
 {
     class EmployeeRepository
     {
@@ -205,6 +205,48 @@ namespace uc5_RetrieveBaesdonName
             return nameList;
 
         }
+
+        //Usecase 6: Finds the employees in a given range from start date to current
+        public string AggregateFunctionBasedOnGender(string query)
+        {
+            string nameList = "";
+            try
+            {
+                using (sqlConnection)
+                {
+                    ////query execution
+                    SqlCommand command = new SqlCommand(query, this.sqlConnection);
+                    //open sql connection
+                    sqlConnection.Open();
+
+                    SqlDataReader sqlDataReader = command.ExecuteReader();
+                    if (sqlDataReader.HasRows)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            Console.WriteLine("TotalSalary: {0} \t MinimumSalary: {1} \t MaximumSalary: {2}AverageSalary: {3} \t Count: {4}", sqlDataReader[0], sqlDataReader[1], sqlDataReader[2], sqlDataReader[3], sqlDataReader[4]);
+                            nameList += sqlDataReader[0] + " " + sqlDataReader[1] + " " + sqlDataReader[2] + " " + sqlDataReader[3] + " " + sqlDataReader[4];
+                        }
+                    }
+                    //close reader
+                    sqlDataReader.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+
+                sqlConnection.Close();
+            }
+            //returns the count of employee in the list between the given range
+            return nameList;
+
+        }
+
         public void DisplayEmployeeDetails(SqlDataReader sqlDataReader)
         {
             //Read data SqlDataReader and store 
@@ -224,6 +266,5 @@ namespace uc5_RetrieveBaesdonName
             Console.WriteLine("\nEmployee ID: {0} \t Employee Name: {1} \nBasic Pay: {2} \t Deduction: {3} \t Income Tax: {4} \t Taxable Pay: {5} \t NetPay: {6} \nGender: {7} \t PhoneNumber: {8} \t Department: {9} \t Address: {10} \t Start Date: {11}", employeeDataManager.EmployeeID, employeeDataManager.EmployeeName, employeeDataManager.BasicPay, employeeDataManager.Deduction, employeeDataManager.IncomeTax, employeeDataManager.TaxablePay, employeeDataManager.NetPay, employeeDataManager.Gender, employeeDataManager.EmployeePhoneNumber, employeeDataManager.EmployeeDepartment, employeeDataManager.Address, employeeDataManager.StartDate);
 
         }
-
     }
 }
